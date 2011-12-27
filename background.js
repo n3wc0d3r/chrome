@@ -342,8 +342,35 @@ $.extend(wot, { core: {
 		xhr.send();
 	},
 
+	extract_hostnames: function(text) {
+
+		//console.log("Selected text:" ,text);
+
+		var iris = [];  // IRIs (international)
+
+		// split text by any blank separator to string
+		var lines = text.split("\n");
+		var re = /((\w+):\/\/)?\w([^:\/\?&=#\[\]\s]+|\[[^\/\?&=#\[\]]+\])[^\.](:(\d+))?/i;
+
+		for (var i=0; i < lines.length; i++) {
+
+			res = lines[i].match(re);
+			if(res) {
+				iris.push(res[0]);
+			}
+		}
+
+		return iris;
+	},
+
 	onload: function()
 	{
+		var _this = this;   // wot.core
+
+		// declare here to reduce scope lookups count
+		var i18n_getMessage = chrome.i18n.getMessage;
+
+
 		try {
 			/* load the manifest for reference */
 
@@ -386,7 +413,28 @@ $.extend(wot, { core: {
 				});
 			});
 
-			wot.listen([ "search", "my" ]);
+			/* This event is fired when user selects text on a page */
+			wot.bind("message:context:selection", function(port, data) {
+
+				if(_this.context_menu_id) {
+
+					// extract URLs or hostnames from selection
+					res = _this.extract_hostnames(data.text);
+
+					var title = i18n_getMessage("ctxmenu_title");
+
+					if(res.length > 0) {
+						title += " (" + res.length + ")";
+					}
+
+					// update WOT menu item's title
+					chrome.contextMenus.update(_this.context_menu_id, { title: title });
+				}
+
+
+			});
+
+			wot.listen([ "search", "my", "context" ]);
 
 			/* event handlers */
 
@@ -424,7 +472,33 @@ $.extend(wot, { core: {
 				}
 			});
 
+
+			// Remove all context menu items
+			chrome.contextMenus.removeAll();
+
+			_this.context_menu_id = chrome.contextMenus.create({
+					title: i18n_getMessage("ctxmenu_title"),
+					contexts: ["selection"],
+
+					onclick: function(info, tab){
+						console.log("Go to MRT Online tool", info);
+						chrome.tabs.create({
+								url : "http://www.mywot.com/en/user/2951360/massrate"
+							},
+							function(tab) {
+								console.log("massrate opened!");
+
+								var port = chrome.tabs.connect(tab.id, {name: "mrt"});
+
+								wot.post("mrt", "fill", { text: info.selectionText }, port);
+
+							});
+					}
+
+				});
+
 			wot.cache.purge();
+
 		} catch (e) {
 			console.log("core.onload: failed with " + e + "\n");
 		}

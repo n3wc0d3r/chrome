@@ -112,5 +112,8 @@
 	},
 	"warnings_unknown": {
 		"message": "This site has an unknown rating."
+	},
+	"ctxmenu_title": {
+		"message": "WOT Mass Rating Tool"
 	}
 }

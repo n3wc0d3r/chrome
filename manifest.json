@@ -1,6 +1,6 @@
 {
 	"name": "WOT",
-	"version": "1.2.10",
+	"version": "1.2.11",
 	"default_locale": "en",
 	"description": "__MSG_ext_description__",
 	"icons": {
@@ -11,6 +11,7 @@
 	},
 	"permissions": [
 		"tabs",
+		"contextMenus",
 		"http://www.mywot.com/*",
 		"http://api.mywot.com/*",
 		"https://api.mywot.com/*"
@@ -46,7 +47,8 @@
 				"wot.js",
 				"content/common.js",
 				"content/my.js",
-				"content/settings.js"
+				"content/settings.js",
+				"content/mrt.js"
 			],
 			"run_at": "document_start",
 			"all_frames": true 

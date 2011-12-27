@@ -117,3 +117,27 @@ wot.prefs = {
 };
 
 wot.prefs.onload();
+
+wot.context = {
+
+	trace_selection : function(event) {
+
+		var selection = window.getSelection().toString();
+
+		/* if selection is not empty, send it's text to background page
+			for detecting URLs or Hostnames for changing context menu item.
+		 */
+		if(selection.length > 0) {
+			wot.post("context", "selection", { text : selection });
+		}
+
+	},
+
+	onload : function() {
+
+		/* add event listener to track selection's change */
+		document.addEventListener("mouseup", wot.context.trace_selection, false);
+	}
+};
+
+wot.context.onload();
