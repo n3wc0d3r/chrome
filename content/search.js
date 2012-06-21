@@ -235,7 +235,7 @@ wot.search = {
 
 	is_ninja: function(rule)
 	{
-		return rule.ninja && wot.search.settings.ninja_donuts;
+		return rule.ninja && true; //wot.search.settings.ninja_donuts;
 	},
 
 	addrating: function(target, link, frame, rule)
@@ -266,7 +266,17 @@ wot.search = {
 
 					// clojure
 					function set_visibility() {
-						elem.setAttribute("class", visibility);
+//						elem.setAttribute("class", visibility);
+
+						// enumerate all wot-donuts on the serp and change their visibility
+						var allelems = frame.document.getElementsByTagName("div"),
+							wot_attr_id = wot.search.getattrname("target");
+						for(var i=0; i < allelems.length; i++) {
+							var e = allelems[i];
+							if(e.getAttribute(wot_attr_id)) {
+								e.setAttribute("class", visibility);
+							}
+						}
 					}
 
 					function do_ninja(event) {
