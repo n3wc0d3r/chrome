@@ -562,7 +562,7 @@ wot.search = {
 					/* Visibility and CSS transitions for Ninja-donuts */
 					var ninja_style = "" +
 						"div[wotsearchtarget] {" +
-							"-webkit-transition: opacity 0.1s cubic-bezier(0.25,0.1,0.25,1) 0.5s;" +
+							"-webkit-transition: opacity 1.1s cubic-bezier(0.25,0.1,0.25,1) 1.0s;" +
 						"} " +
 						"div[wotsearchtarget].visible {" +
 							"-webkit-transition: opacity 0s;" +
